@@ -22,7 +22,7 @@ namespace OpenTransportData.API.Controllers
         [HttpGet("{crs}/arrivals")]
         public async Task<IActionResult> GetStationArrivals(string crs)
         {
-            var arrivals = await _trainService.GetStationTimetableAsync(crs, TimetableTypes.Arrival);
+            var arrivals = await _trainService.GetStationArrivalsAsync(crs);
             
             return Ok(arrivals);
         }
@@ -30,7 +30,7 @@ namespace OpenTransportData.API.Controllers
         [HttpGet("{crs}/departures")]
         public async Task<IActionResult> GetStationDepartures(string crs)
         {
-            var departures = await _trainService.GetStationTimetableAsync(crs, TimetableTypes.Departure);
+            var departures = await _trainService.GetStationDeparturesAsync(crs);
 
             return Ok(departures);
         }
