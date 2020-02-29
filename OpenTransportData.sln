@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTransportData.Service.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTransportData.Tests", "OpenTransportData.Tests\OpenTransportData.Tests.csproj", "{E144F784-8E2F-4FA7-9D23-E90BE7FA8AAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTransportData.Core", "OpenTransportData.Core\OpenTransportData.Core.csproj", "{E0DB0325-FB77-434A-8E10-87E96BE835FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTransportData.Utility.StationLoader", "OpenTransportData.Utility.StationLoader\OpenTransportData.Utility.StationLoader.csproj", "{BE88AEDB-E571-4AF5-8A87-1F5B76E08C22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{E144F784-8E2F-4FA7-9D23-E90BE7FA8AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E144F784-8E2F-4FA7-9D23-E90BE7FA8AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E144F784-8E2F-4FA7-9D23-E90BE7FA8AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0DB0325-FB77-434A-8E10-87E96BE835FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0DB0325-FB77-434A-8E10-87E96BE835FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0DB0325-FB77-434A-8E10-87E96BE835FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0DB0325-FB77-434A-8E10-87E96BE835FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE88AEDB-E571-4AF5-8A87-1F5B76E08C22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE88AEDB-E571-4AF5-8A87-1F5B76E08C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE88AEDB-E571-4AF5-8A87-1F5B76E08C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE88AEDB-E571-4AF5-8A87-1F5B76E08C22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

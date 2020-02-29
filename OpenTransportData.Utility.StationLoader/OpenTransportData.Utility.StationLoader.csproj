@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.2" />
+    <ProjectReference Include="..\OpenTransportData.Core\OpenTransportData.Core.csproj" />
   </ItemGroup>
 
 </Project>

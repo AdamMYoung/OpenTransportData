@@ -13,22 +13,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using OpenTransportData.Service.Train;
+using OpenTransportData.Utility.StationLoader;
 
 namespace OpenTransportData
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //Options registration.
+            var serviceOptions = Configuration.GetSection("Services");
+            services.Configure<TrainServiceOptions>(serviceOptions.GetSection("Train"));
+
+            //Service registration.
+            services.AddSingleton<ITrainService, TrainService>();
+            services.AddSingleton<IStationLoader, StationLoader>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
