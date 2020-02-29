@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpenTransportData.Core.Enums;
+using OpenTransportData.Service.Train;
 
 namespace OpenTransportData.API.Controllers
 {
@@ -11,22 +13,34 @@ namespace OpenTransportData.API.Controllers
     [ApiController]
     public class TrainController : ControllerBase
     {
-        [HttpGet("{crs}/arrivals")]
-        public IActionResult GetArrivals(string crs)
+        private readonly ITrainService _trainService;
+        public TrainController(ITrainService trainService)
         {
-            return Ok("Arrivals");
+            _trainService = trainService;
+        }
+
+        [HttpGet("{crs}/arrivals")]
+        public async Task<IActionResult> GetStationArrivals(string crs)
+        {
+            var arrivals = await _trainService.GetStationArrivalsAsync(crs);
+            
+            return Ok(arrivals);
         }
 
         [HttpGet("{crs}/departures")]
-        public IActionResult GetDepartures(string crs)
+        public async Task<IActionResult> GetStationDepartures(string crs)
         {
-            return Ok("Departures");
+            var departures = await _trainService.GetStationDeparturesAsync(crs);
+
+            return Ok(departures);
         }
 
         [HttpGet("stations")]
-        public IActionResult GetStations()
+        public async Task<IActionResult> GetStations()
         {
-            return Ok();
+            var stations = await _trainService.GetAllStationsAsync();
+            
+            return Ok(stations);
         }
     }
 }
