@@ -15,12 +15,12 @@ namespace OpenTransportData.Utility.StationLoader
         /// <returns></returns>
         public IEnumerable<Station> GetAll()
         {
-            if(_stations == null)
+            if (_stations == null)
             {
                 var stationList = new List<Station>();
-                using(var reader = new StreamReader(_filePath))
+                using (var reader = new StreamReader(_filePath))
                 {
-                    while(!reader.EndOfStream)
+                    while (!reader.EndOfStream)
                     {
                         var line = reader.ReadLine();
                         var values = line.Split(',');
@@ -33,7 +33,7 @@ namespace OpenTransportData.Utility.StationLoader
                     }
                 }
 
-               _stations = stationList;
+                _stations = stationList;
             }
 
             return _stations;

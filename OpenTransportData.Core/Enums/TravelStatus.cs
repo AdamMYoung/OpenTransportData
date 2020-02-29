@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OpenTransportData.Core.Enums
+﻿namespace OpenTransportData.Core.Enums
 {
     public enum TravelStatus
     {

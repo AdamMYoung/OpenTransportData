@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OpenTransportData.Service.Train.Models
+﻿namespace OpenTransportData.Service.Train.Models
 {
     public class Station
     {

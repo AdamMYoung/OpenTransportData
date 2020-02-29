@@ -1,7 +1,5 @@
 ﻿using OpenTransportData.Utility.StationLoader.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace OpenTransportData.Utility.StationLoader
 {
