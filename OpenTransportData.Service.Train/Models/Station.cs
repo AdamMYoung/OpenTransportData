@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpenTransportData.Service.Train.Dtos
+namespace OpenTransportData.Service.Train.Models
 {
     public class Station
     {
