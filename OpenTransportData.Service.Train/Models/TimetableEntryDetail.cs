@@ -1,15 +1,16 @@
 ﻿using OpenTransportData.Core.Enums;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace OpenTransportData.Service.Train.Models
 {
-    public class TimetableEntry
+    public class TimetableEntryDetail
     {
         /// <summary>
         /// ID of the entry.
         /// </summary>
-        public string ServiceID { get;set;}
+        public string ServiceID { get; set; }
 
         /// <summary>
         /// Origin of the train.
@@ -60,5 +61,15 @@ namespace OpenTransportData.Service.Train.Models
         /// Current status of the train.
         /// </summary>
         public TravelStatus Status { get; set; }
+
+        /// <summary>
+        /// Previous calling points of the timetable.
+        /// </summary>
+        public IEnumerable<CallingPoint> PreviousCallingPoints { get; set; }
+
+        /// <summary>
+        /// Subsequent calling points of the timetable.
+        /// </summary>
+        public IEnumerable<CallingPoint> SubsequentCallingPoint { get; set; }
     }
 }

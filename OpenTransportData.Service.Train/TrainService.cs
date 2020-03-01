@@ -2,6 +2,7 @@
 using NationalRailDarwin;
 using OpenTransportData.Core.Enums;
 using OpenTransportData.Service.Train.Models;
+using OpenTransportData.Service.Train.Parser;
 using OpenTransportData.Utility.StationLoader;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,14 @@ namespace OpenTransportData.Service.Train
         private readonly LDBServiceSoap _ldbService = new LDBServiceSoapClient(LDBServiceSoapClient.EndpointConfiguration.LDBServiceSoap);
         private readonly AccessToken _accessToken;
         private readonly IStationLoader _stationLoader;
+        private readonly IDarwinParser _darwinParser;
 
         public TrainService(IStationLoader stationLoader,
+            IDarwinParser darwinParser,
             IOptions<TrainServiceOptions> options)
         {
             _stationLoader = stationLoader;
+            _darwinParser = darwinParser;
             _accessToken = new AccessToken() { TokenValue = options.Value.AccessToken };
         }
 
@@ -39,94 +43,73 @@ namespace OpenTransportData.Service.Train
             });
         }
 
-
         /// <summary>
         /// Gets the arrival timetable for the provided station.
         /// </summary>
         /// <param name="crs">CRS of the station.</param>
+        /// <param name="timeWindow">Time window to fetch.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TimetableEntry>> GetStationArrivalsAsync(string crs)
+        public async Task<IEnumerable<TimetableEntry>> GetStationArrivalsAsync(string crs, int timeWindow)
         {
-            var arrivalBoard = await _ldbService.GetArrivalBoardAsync(new GetArrivalBoardRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.to, 0, 120));
+            var arrivalBoard = await _ldbService.GetArrivalBoardAsync(new GetArrivalBoardRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.to, 0, timeWindow));
             var boardResult = arrivalBoard.GetStationBoardResult;
 
-            return boardResult.trainServices.Select(t => new TimetableEntry()
-            {
-                Origin = t.origin[0].locationName,
-                Destination = t.destination[0].locationName,
-                Platform = t.platform,
-                PlannedTime = DateTime.Parse(t.sta),
-                EstimatedTime = GetEstimatedTime(t.sta, t.eta),
-                Length = t.length,
-                Operator = t.@operator,
-                DelayReason = t.delayReason,
-                CancellationReason = t.cancelReason,
-                Status = GetServiceStatus(t, TimetableTypes.Arrival)
-            });
+            return _darwinParser.Parse(boardResult.trainServices, TimetableTypes.Arrival);
         }
 
         /// <summary>
         /// Gets the departure timetable for the provided station.
         /// </summary>
         /// <param name="crs">CRS of the station.</param>
+        /// <param name="timeWindow">Time window to fetch.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<TimetableEntry>> GetStationDeparturesAsync(string crs)
+        public async Task<IEnumerable<TimetableEntry>> GetStationDeparturesAsync(string crs, int timeWindow)
         {
-            var arrivalBoard = await _ldbService.GetDepartureBoardAsync(new GetDepartureBoardRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.from, 0, 120));
-            var boardResult = arrivalBoard.GetStationBoardResult;
+            var departureBoard = await _ldbService.GetDepartureBoardAsync(new GetDepartureBoardRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.from, 0, timeWindow));
+            var boardResult = departureBoard.GetStationBoardResult;
 
-            return boardResult.trainServices.Select(t => new TimetableEntry()
-            {
-                Origin = t.origin[0].locationName,
-                Destination = t.destination[0].locationName,
-                Platform = t.platform,
-                PlannedTime = DateTime.Parse(t.std),
-                EstimatedTime = GetEstimatedTime(t.std, t.etd),
-                Length = t.length,
-                Operator = t.@operator,
-                DelayReason = t.delayReason,
-                CancellationReason = t.cancelReason,
-                Status = GetServiceStatus(t, TimetableTypes.Departure)
-            });
-           
+            return _darwinParser.Parse(boardResult.trainServices, TimetableTypes.Departure);
         }
 
         /// <summary>
-        /// Returns the status of the service.
+        /// Gets the arrival timetable for the provided station, along with all calling points of the service.
         /// </summary>
-        /// <param name="service">Service to get the status from.</param>
+        /// <param name="crs">CRS of the station.</param>
+        /// <param name="timeWindow">Time window to fetch.</param>
         /// <returns></returns>
-        private TravelStatus GetServiceStatus(ServiceItem1 service, TimetableTypes boardType)
+        public async Task<IEnumerable<TimetableEntryDetail>> GetDetailedStationArrivalsAsync(string crs, int timeWindow)
         {
-            if (service.isCancelled) return TravelStatus.Cancelled;
+            var arrivalBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.to, 0, timeWindow));
+            var board = arrivalBoard.GetStationBoardResult;
 
-            switch (boardType)
-            {
-                case TimetableTypes.Arrival:
-                    if (service.eta.ToLower() == "on time") return TravelStatus.OnTime;
-                    break;
-                case TimetableTypes.Departure:
-                    if (service.etd.ToLower() == "on time") return TravelStatus.OnTime;
-                    break;
-                default:
-                    throw new NotImplementedException($"Board type not implemented: {boardType}");
-            }
-
-            return TravelStatus.Delayed;
+            return _darwinParser.Parse(board.trainServices, TimetableTypes.Arrival);
         }
 
         /// <summary>
-        /// Returns the estimated time from the provided planned and estimated strings.
+        /// Gets the departure timetable for the provided station, along with all calling points of the service.
         /// </summary>
-        /// <param name="planned">String of the planned arrival/departure.</param>
-        /// <param name="estimated">String of the estimated arrival/departure.</param>
+        /// <param name="crs">CRS of the station.</param>
+        /// <param name="timeWindow">Time window to fetch.</param>
         /// <returns></returns>
-        private DateTime GetEstimatedTime(string planned, string estimated)
+        public async Task<IEnumerable<TimetableEntryDetail>> GetDetailedStationDeparturesAsync(string crs, int timeWindow)
         {
-            if (estimated.ToLower() == "on time" || estimated.ToLower() == "cancelled")
-                return DateTime.Parse(planned);
-            else
-                return DateTime.Parse(estimated);
+            var departureBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.from, 0, timeWindow));
+            var board = departureBoard.GetStationBoardResult;
+
+            return _darwinParser.Parse(board.trainServices, TimetableTypes.Departure);
+        }
+
+        /// <summary>
+        /// Gets service details for the provided service.
+        /// </summary>
+        /// <param name="serviceID">ID of the service.</param>
+        /// <returns></returns>
+        public async Task<Models.ServiceDetails> GetServiceDetailsAsync(string serviceID)
+        {
+            var details = await _ldbService.GetServiceDetailsAsync(new GetServiceDetailsRequest(_accessToken, serviceID));
+            var result = details.GetServiceDetailsResult;
+
+            return _darwinParser.Parse(result);
         }
     }
 }

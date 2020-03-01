@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OpenTransportData.Service.Train;
+using OpenTransportData.Service.Train.Parser;
 using OpenTransportData.Utility.StationLoader;
 
 namespace OpenTransportData
@@ -43,6 +44,7 @@ namespace OpenTransportData
             //Service registration.
             services.AddSingleton<ITrainService, TrainService>();
             services.AddSingleton<IStationLoader, StationLoader>();
+            services.AddSingleton<IDarwinParser, DarwinParser>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -54,8 +56,6 @@ namespace OpenTransportData
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
