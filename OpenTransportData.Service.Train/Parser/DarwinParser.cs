@@ -23,7 +23,7 @@ namespace OpenTransportData.Service.Train.Parser
                 Origin = t.origin[0].locationName,
                 Destination = t.destination[0].locationName,
                 Platform = t.platform,
-                PlannedTime = DateTime.Parse(t.sta),
+                PlannedTime = t.sta != null ? DateTime.Parse(t.sta) : (DateTime?) null,
                 EstimatedTime = GetEstimatedTime(t.sta, t.eta),
                 Length = t.length,
                 Operator = t.@operator,
@@ -46,7 +46,7 @@ namespace OpenTransportData.Service.Train.Parser
                 Origin = t.origin[0].locationName,
                 Destination = t.destination[0].locationName,
                 Platform = t.platform,
-                PlannedTime = DateTime.Parse(t.sta),
+                PlannedTime = t.sta != null ? DateTime.Parse(t.sta) : (DateTime?) null,
                 EstimatedTime = GetEstimatedTime(t.sta, t.eta),
                 Length = t.length,
                 Operator = t.@operator,
@@ -57,7 +57,7 @@ namespace OpenTransportData.Service.Train.Parser
                 {
                     Location = c.locationName,
                     CRS = c.crs,
-                    PlannedTime = DateTime.Parse(c.st),
+                    PlannedTime = c.st != null ? DateTime.Parse(c.st) : (DateTime?)null,
                     EstimatedTime = GetEstimatedTime(c.st, c.et),
                     Length = c.length
                 }),
@@ -65,7 +65,7 @@ namespace OpenTransportData.Service.Train.Parser
                 {
                     Location = c.locationName,
                     CRS = c.crs,
-                    PlannedTime = DateTime.Parse(c.st),
+                    PlannedTime = c.st != null ? DateTime.Parse(c.st) : (DateTime?)null,
                     EstimatedTime = GetEstimatedTime(c.st, c.et),
                     Length = c.length
                 })
@@ -88,13 +88,13 @@ namespace OpenTransportData.Service.Train.Parser
                 CRS = details.crs,
                 Length = details.length,
                 Platform = details.platform,
-                PlannedTime = DateTime.Parse(details.sta),
+                PlannedTime = details.sta != null ? DateTime.Parse(details.sta) : (DateTime?)null,
                 EstimatedTime = GetEstimatedTime(details.sta, details.eta),
                 PreviousCallingPoints = details.previousCallingPoints?.First().callingPoint.ToList().Select(c => new Models.CallingPoint()
                 {
                     Location = c.locationName,
                     CRS = c.crs,
-                    PlannedTime = DateTime.Parse(c.st),
+                    PlannedTime = c.st != null ? DateTime.Parse(c.st) : (DateTime?)null,
                     EstimatedTime = GetEstimatedTime(c.st, c.et),
                     Length = c.length
                 }),
@@ -102,7 +102,7 @@ namespace OpenTransportData.Service.Train.Parser
                 {
                     Location = c.locationName,
                     CRS = c.crs,
-                    PlannedTime = DateTime.Parse(c.st),
+                    PlannedTime = c.st != null ? DateTime.Parse(c.st) : (DateTime?)null,
                     EstimatedTime = GetEstimatedTime(c.st, c.et),
                     Length = c.length
                 })

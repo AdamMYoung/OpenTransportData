@@ -29,7 +29,7 @@ namespace OpenTransportData.Service.Train.Models
         /// <summary>
         /// Time the train is planned to depart/arrive at.
         /// </summary>
-        public DateTime PlannedTime { get; set; }
+        public DateTime? PlannedTime { get; set; }
 
         /// <summary>
         /// Time the train will depart/arrive at.

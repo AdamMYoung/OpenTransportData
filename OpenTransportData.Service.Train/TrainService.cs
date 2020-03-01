@@ -79,7 +79,7 @@ namespace OpenTransportData.Service.Train
         /// <returns></returns>
         public async Task<IEnumerable<TimetableEntryDetail>> GetDetailedStationArrivalsAsync(string crs, int timeWindow)
         {
-            var arrivalBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToLower(), "", FilterType.to, 0, timeWindow));
+            var arrivalBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.to, 0, timeWindow));
             var board = arrivalBoard.GetStationBoardResult;
 
             return _darwinParser.Parse(board.trainServices, TimetableTypes.Arrival);
@@ -93,7 +93,7 @@ namespace OpenTransportData.Service.Train
         /// <returns></returns>
         public async Task<IEnumerable<TimetableEntryDetail>> GetDetailedStationDeparturesAsync(string crs, int timeWindow)
         {
-            var departureBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToLower(), "", FilterType.from, 0, timeWindow));
+            var departureBoard = await _ldbService.GetDepBoardWithDetailsAsync(new GetDepBoardWithDetailsRequest(_accessToken, 30, crs.ToUpper(), "", FilterType.from, 0, timeWindow));
             var board = departureBoard.GetStationBoardResult;
 
             return _darwinParser.Parse(board.trainServices, TimetableTypes.Departure);

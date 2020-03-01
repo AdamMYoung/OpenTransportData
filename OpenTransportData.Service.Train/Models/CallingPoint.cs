@@ -20,7 +20,7 @@ namespace OpenTransportData.Service.Train.Models
         /// <summary>
         /// Scheduled time of the service.
         /// </summary>
-        public DateTime PlannedTime { get; set; }
+        public DateTime? PlannedTime { get; set; }
 
         /// <summary>
         /// Estimated time of the service.
